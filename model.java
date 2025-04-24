@@ -1,46 +1,33 @@
+import java.util.ArrayList;
+
 public class Model {
-    private double operand1;
-    private double operand2;
-    private String operator;
 
-    public double getOperand1() {
-        return operand1;
+    DatabaseConnection d;
+    Game g;
+    Scoreboard sb;
+    User u;
+
+    public Model(){
+        DatabaseConnection d = new DatabaseConnection();
+        this.d = d; 
+        g = new Game();  
+        u = new User();     
+    }
+ 
+    public void setUser(String password, String username, int Amount){
+        u.esstablish(username,password,Amount);
+    }
+    public ArrayList<String> getLeaderBoard(){
+        return sb.getPlayers();
     }
 
-    public double getOperand2() {
-        return operand2;
-    }
-
-    public String getOperator() {
-        return operator;
-    }
-
-    public boolean parseInput(String input) {
-        input = input.trim();
-
-        if (input.contains("+")) {
-            operator = "+";
-        } else if (input.contains("-")) {
-            operator = "-";
-        } else if (input.contains("*")) {
-            operator = "*";
-        } else if (input.contains("/")) {
-            operator = "/";
-        } else if (input.contains("%")) {
-            operator = "%";
-        } else if (input.contains("^")) {
-            operator = "^";
-        } else {
-            return false; 
+    public String getResults(){
+        if(g.Flip()){
+            return "HEADS";
         }
-
-        String[] parts = input.split("\\" + operator); 
-        try {
-            operand1 = Double.parseDouble(parts[0].trim());
-            operand2 = Double.parseDouble(parts[1].trim());
-            return true; 
-        } catch (NumberFormatException e) {
-            return false; 
+        else{
+            return "TALLS";
         }
     }
+
 }

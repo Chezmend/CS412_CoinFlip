@@ -10,36 +10,30 @@ import java.net.Socket;
 public class Controller {
 
     private View view;
-    private Model model;
 
-    public Controller(View view, Model model) {
+    public Controller(View view) {
         this.view = view;
-        this.model = model;
-        this.view.addActionListnerButton(new ActionListenerButton());
+        login l = view.getLoginPanel();
+        create c = view.getCreatePanel();
+        c.addActionListnerButton(new createTab());
+        l.addActionListnerButton(new loginTab());
     }
 
-    public class ActionListenerButton implements ActionListener {
-
+    public class loginTab implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             go();
         }
     }
-
+    public class createTab implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            go();
+        }
+    }
     public void go() {
+        System.out.println("GOT HERE");
         String input = view.getjtextareaClient().trim();
-        if (input.isEmpty()) {
-            view.setjtextareaServer("ERROR: BAD INPUT");
-            return;
-        }
-
-        boolean isParsed = model.parseInput(input);
-
-        if (!isParsed) {
-            view.setjtextareaServer("ERROR: BAD INPUT");
-            return;
-        }
-
         try (Socket socket = new Socket("localhost", 5001)) {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             System.out.println("SENDING: " + input);

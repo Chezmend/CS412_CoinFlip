@@ -23,41 +23,12 @@ public class Server {
                     System.out.println("Received: " + input);
 
                     Model model = new Model();
-                    if (model.parseInput(input)) {
-
-                        double result = evaluate(model.getOperand1(), model.getOperand2(), model.getOperator());
-                        out.println(Double.toString(result));
-                    } else {
-                        out.println("Error: Invalid input");
-                    }
+                    
+                    out.println(model.getResults());
                 }
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
-        }
-    }
-
-    public static double evaluate(double operand1, double operand2, String operator) {
-        if (operator.equals("+")) {
-            return operand1 + operand2;
-        } else if (operator.equals("-")) {
-            return operand1 - operand2;
-        } else if (operator.equals("*")) {
-            return operand1 * operand2;
-        } else if (operator.equals("/")) {
-            if (operand2 == 0) {
-                throw new ArithmeticException("Division by zero");
-            }
-            return operand1 / operand2;
-        } else if (operator.equals("%")) {
-            if (operand2 == 0) {
-                throw new ArithmeticException("Modulo by zero");
-            }
-            return operand1 % operand2;
-        } else if (operator.equals("^")) {
-            return Math.pow(operand1, operand2);
-        } else {
-            throw new IllegalArgumentException("Unknown operator: " + operator);
         }
     }
 }

@@ -1,9 +1,8 @@
 public class Main{
     public static void main(String[] args) {
 
-       Model m = new Model();
-       View v = new View(m);
-       Controller c = new Controller(v,m);
+       View v = new View();
+       Controller c = new Controller(v);
 
        v.initializeUI();
     }
