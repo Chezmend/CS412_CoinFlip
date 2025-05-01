@@ -1,0 +1,8 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "/Users/desmondquintero/Downloads/bcrypt-0.10.2-javadoc.jar",
+        "/Users/desmondquintero/Downloads/jbcrypt-0.4.jar",
+        "/Users/desmondquintero/Downloads/sqlite-jdbc-3.49.1.0.jar"
+    ]
+}
