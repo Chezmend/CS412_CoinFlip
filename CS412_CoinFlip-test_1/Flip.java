@@ -10,9 +10,16 @@ public class Flip extends JPanel {
     private JButton FlipButton;
     private JPanel inputPanel;
     private JList choice;
+    private JLabel jLabelChoice;
+    private JLabel jLabelAmount;
+    private JLabel jLabelResult;
 
 
     public Flip() {
+        jLabelAmount = new JLabel("Enter in the Amount:");
+        jLabelChoice = new JLabel("choose heads or tails:");
+        jLabelResult = new JLabel("actual result of coin flip:");
+
         Amount = new JTextField(10);
         Result = new JTextField(10);
         String options[]= { "heads","tails"};
@@ -21,8 +28,11 @@ public class Flip extends JPanel {
         FlipButton = new JButton("FLIP!");
 
         inputPanel = new JPanel();
+        inputPanel.add(jLabelChoice);
         inputPanel.add(choice);
+        inputPanel.add(jLabelAmount);
         inputPanel.add(Amount);
+        inputPanel.add(jLabelResult);
         inputPanel.add(Result);
 
 

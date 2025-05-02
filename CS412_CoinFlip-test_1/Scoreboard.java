@@ -14,19 +14,29 @@ public class Scoreboard {
 
     public ArrayList<String> getPlayers() {
         ArrayList<String> PlayerList = new ArrayList<>();
-
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db"); PreparedStatement pstmt = conn.prepareStatement("SELECT id, Username, age FROM students"); ResultSet rs = pstmt.executeQuery()) {
-
+    
+        String sql = "SELECT players.Username, game.Amount " +
+                     "FROM players " +
+                     "JOIN game ON players.id = game.player_id " +
+                     "ORDER BY game.Amount DESC " +
+                     "LIMIT 3";
+    
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+    
             while (rs.next()) {
                 String Username = rs.getString("Username");
                 int Amount = rs.getInt("Amount");
+                System.out.println("SCOREBOARD: "+ Username + " " + Amount);
                 String PlayerData = Username + " " + Amount;
                 PlayerList.add(PlayerData);
             }
         } catch (SQLException e) {
+            System.out.println("ERROR IN SCOREBOARD");
             e.printStackTrace();
         }
-
+    
         return PlayerList;
     }
 }

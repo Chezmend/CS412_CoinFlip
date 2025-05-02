@@ -40,9 +40,11 @@ public class View {
     public Roll getRollPanel() {
         return r;
     }
-    public Flip getFlipPanel(){
+
+    public Flip getFlipPanel() {
         return f;
     }
+
     public Logout getLogoutPanel() {
         return lo;
     }
@@ -65,7 +67,7 @@ public class View {
         jTabs.remove(0);
         jTabs.remove(0);
 
-        jTabs.add("Roll",r);
+        jTabs.add("Roll", r);
         jTabs.add("flip", f);
         jTabs.add("leaderboard", lb);
         jTabs.add("logout", lo);

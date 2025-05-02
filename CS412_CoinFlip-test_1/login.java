@@ -12,23 +12,28 @@ public class login extends JPanel {
     private JTextField password;
     private JButton loginButton;
     private JPanel inputPanel;
-    private JLabel jl;
-    private JLabel jl2;
+    private JLabel jLabelUser;
+    private JLabel jLabelPassword;
     public login() {
+
+        jLabelUser = new JLabel("Username");
+        jLabelPassword = new JLabel("Password");
         username = new JTextField(10);
         password = new JTextField(10);
         loginButton = new JButton("Login");
-        jl = new JLabel("username: ");
-        jl2 = new JLabel("username: ");
+
 
         inputPanel = new JPanel();
+        inputPanel.add(jLabelUser);
         inputPanel.add(username);
+        inputPanel.add(jLabelPassword);
         inputPanel.add(password);
-        inputPanel.add(jl2);
+        //inputPanel.add(jl2);
+
         setLayout(new BorderLayout());
         add(inputPanel, BorderLayout.CENTER);
         add(loginButton, BorderLayout.SOUTH);
-        add(jl, BorderLayout.WEST);
+        //add(, BorderLayout.WEST);
     }
 
     public void addActionListnerButton(ActionListener listener) {

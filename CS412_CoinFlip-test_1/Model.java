@@ -2,14 +2,17 @@ import java.util.ArrayList;
 
 public class Model {
 
-    DatabaseConnection d;
-    Game g;
-    Scoreboard sb;
-    User u;
+    private DatabaseConnection d;
+    private Game g;
+    private Scoreboard sb;
+    private User u;
+    private String username;
+    private String loggedInUsername = null;
 
     public Model(){
         DatabaseConnection d = new DatabaseConnection();
-        this.d = d; 
+        this.d = d;
+        sb = new Scoreboard(); 
         g = new Game();  
         u = new User();     
     }
@@ -22,11 +25,11 @@ public class Model {
         return sb.getPlayers();
     }
 
-    public String getResults(int amount, String guess){
-        return g.Flip(amount, guess, u.getUsername());
+    public String getResults(int amount, String guess, String username){
+        return g.Flip(amount, guess, username);
     }
-    public String getDice(int amount, String guess){
-        return g.Roll(amount, guess, u.getUsername());
+    public String getDice(int amount, String guess, String username){
+        return g.Roll(amount, guess, username);
     }
     public boolean verifying(String username, String password){
         return u.verifying(username,password);

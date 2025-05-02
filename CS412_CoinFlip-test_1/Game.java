@@ -30,8 +30,8 @@ public class Game {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db")) {
             String cmd = "UPDATE game SET amount = ? WHERE player_id = (SELECT id FROM players WHERE username = ?)";
             try (PreparedStatement cmdPre = conn.prepareStatement(cmd)) {
-                cmdPre.setString(1, username);
-                cmdPre.setInt(2, amount);
+                cmdPre.setInt(1, amount);
+                cmdPre.setString(2, username);
                 cmdPre.executeUpdate();
             } 
         } catch (SQLException ex) {
@@ -59,12 +59,33 @@ public class Game {
     public String Flip(int amount, String guess, String username){
         Random rand = new Random();
         int num = rand.nextInt(2);
-        
+        int current = getAmount(username);
+
         if(num == 1){
+            if(guess.equals("heads")){
+                System.out.println("GOT HERE IN THE GAME: " + amount + " Username: " + username + "Guess: " + guess + " CURRENT: " + current);
+
+                current += amount;
+                update(username, current);
+            }
+            else{
+                System.out.println("GOT HERE IN THE GAME: " + amount + " Username: " + username + "Guess: " + guess + " CURRENT: " + current);
+
+                current -= amount;
+                update(username, current);
+            }
             return "HEADS";
         }
         else{
-            return "TALLS";
+            if(guess.equals("tails")){
+                current += amount;
+                update(username, current);
+            }
+            else{
+                current -= amount;
+                update(username, current);
+            }
+            return "TAILS";
         }
     }
 }

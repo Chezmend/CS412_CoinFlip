@@ -2,17 +2,14 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.sql.*;
 
 public class User {
-    private String username;
-
+    private String username; 
     public User() {
 
     }
     public String getUsername(){
         return username;
     }
-
     public void establish(String password, String username) {
-        this.username = username;
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db")) {
 
             String insertPlayer = "INSERT INTO players (username, password) VALUES (?, ?)";
@@ -45,7 +42,8 @@ public class User {
         }
     }
 
-    public boolean verifying(String password, String username) {
+    public boolean verifying(String username, String password) {
+        System.out.println("INSIDE OF USER: " + username + " PASSWORD");
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db")) {
             String query = "SELECT password FROM players WHERE username = ? LIMIT 1";
             try (PreparedStatement stmt = conn.prepareStatement(query)) {

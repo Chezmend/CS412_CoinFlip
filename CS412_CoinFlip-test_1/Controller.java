@@ -1,4 +1,3 @@
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -8,20 +7,24 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class Controller {
-    public static void main(String[] args) {
-
-        View v = new View();
-        Controller c = new Controller(v);
-
-        v.initializeUI();
-    }
-
     private View view;
+
     private create c;
     private Flip f;
     private Roll r;
     private login l;
     private Logout lo;
+    private leaderBoard lb;
+
+    private Socket socket;
+    private PrintWriter out;
+    private BufferedReader in;
+
+    public static void main(String[] args) {
+        View v = new View();
+        Controller c = new Controller(v);
+        v.initializeUI();  // optionally move this inside Controller after listeners
+    }
 
     public Controller(View view) {
         this.view = view;
@@ -30,6 +33,16 @@ public class Controller {
         f = view.getFlipPanel();
         r = view.getRollPanel();
         lo = view.getLogoutPanel();
+        lb = view.getLeaderBoard();
+
+        try {
+            socket = new Socket("localhost", 5001);
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        } catch (IOException e) {
+            System.out.println("FAILED to connect to server");
+            e.printStackTrace();
+        }
 
         c.addActionListnerButton(new createTab());
         f.addActionListnerButton(new FlipTab());
@@ -37,135 +50,121 @@ public class Controller {
         l.addActionListnerButton(new loginTab());
         lo.addActionListnerButton(new logoutTab());
     }
+
     public class RollTab implements ActionListener {
         @Override
-        public void actionPerformed(ActionEvent e)
-        {
+        public void actionPerformed(ActionEvent e) {
             Roll();
         }
     }
+
     public class FlipTab implements ActionListener {
         @Override
-        public void actionPerformed(ActionEvent e)
-        {
+        public void actionPerformed(ActionEvent e) {
             Flip();
         }
     }
+
     public class logoutTab implements ActionListener {
         @Override
-        public void actionPerformed(ActionEvent e)
-        {
+        public void actionPerformed(ActionEvent e) {
             logout();
         }
     }
+
     public class loginTab implements ActionListener {
         @Override
-        public void actionPerformed(ActionEvent e)
-        {
+        public void actionPerformed(ActionEvent e) {
             login();
         }
     }
+
     public class createTab implements ActionListener {
         @Override
-        public void actionPerformed(ActionEvent e)
-        {
+        public void actionPerformed(ActionEvent e) {
             create();
         }
     }
+
     public void Flip() {
         String input = "CHOICE: " + f.getChoice() + " AMOUNT: " + f.getAmount();
-        try (Socket socket = new Socket("localhost", 5001)) {
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            System.out.println(input);
+        try {
             out.println(input);
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String response = in.readLine();
-
             f.setResult(response);
-            System.out.println(response);
-
+            leaderBoard();
         } catch (IOException e) {
-            System.out.println("FAILED to connect to server");
+            System.out.println("Error during Flip: " + e.getMessage());
         }
     }
 
     public void Roll() {
-        System.out.println("GOT HERE");
         String input = "GUESS: " + r.getGuess() + " AMOUNT: " + r.getAmount();
-        try (Socket socket = new Socket("localhost", 5001)) {
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            System.out.println(input);
+        try {
             out.println(input);
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String response = in.readLine();
-
             r.setResult(response);
-            System.out.println(response);
-
+            leaderBoard();
         } catch (IOException e) {
-            System.out.println("FAILED to connect to server");
+            System.out.println("Error during Roll: " + e.getMessage());
         }
     }
 
     public void create() {
-        System.out.println("GOT HERE");
-        String input = "USERNAME: " + c.getUsername() +  " Password: " + c.getPassword();
-
-        try (Socket socket = new Socket("localhost", 5001))
-        {
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            System.out.println(input);
+        String input = "USERNAME: " + c.getUsername() + " Password: " + c.getPassword();
+        try {
             out.println(input);
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String response = in.readLine();
-
+            //c.setResult(response);
         } catch (IOException e) {
-            System.out.println("FAILED to connect to server");
+            System.out.println("Error during Create: " + e.getMessage());
         }
     }
 
-    public void login()
-    {
-        System.out.println("GOT HERE");
-        String input = "LOGIN: " + l.getUsername() +  " Password: " + l.getPassword();
-
-        try (Socket socket = new Socket("localhost", 5001))
-        {
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            System.out.println(input);
+    public void login() {
+        String input = "LOGIN: " + l.getUsername() + " Password: " + l.getPassword();
+        try {
             out.println(input);
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String response = in.readLine();
             System.out.println(response);
 
-            if(response.equals("LOGGED IN")){
+            if ("LOGGED IN".equals(response)) {
                 view.LOGGEDIN();
+                leaderBoard();
             }
         } catch (IOException e) {
-            System.out.println("FAILED to connect to server");
+            System.out.println("Error during Login: " + e.getMessage());
         }
     }
-    public void logout()
-    {
+
+    public void logout() {
         System.out.println("GOT HERE");
-        String input = "LOGOUT: " + l.getUsername() +  " Password: " + l.getPassword();
-
-        try (Socket socket = new Socket("localhost", 5001))
-        {
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            System.out.println(input);
+        String input = "LOGOUT: " + l.getUsername() + " Password: " + l.getPassword();
+        try {
             out.println(input);
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String response = in.readLine();
             view.LOGGEDOUT();
         } catch (IOException e) {
-            System.out.println("FAILED to connect to server");
+            System.out.println("Error during Logout: " + e.getMessage());
         }
     }
 
+    public void leaderBoard() {
+        String input = "LEADERBOARD:";
+        try {
+            out.println(input);
+            String response = in.readLine();
+            lb.setPlayers(response);
+        } catch (IOException e) {
+            System.out.println("Error during LeaderBoard: " + e.getMessage());
+        }
+    }
+
+    public void disconnect() {
+        try {
+            if (socket != null) socket.close();
+        } catch (IOException e) {
+            System.out.println("Error during Disconnect: " + e.getMessage());
+        }
+    }
 }

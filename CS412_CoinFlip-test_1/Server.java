@@ -18,8 +18,7 @@ public class Server {
                 
                 myServerThread clientThread = new myServerThread(socket, clients);
                 synchronized (clients) {
-                    clients.add(clientThread);
-                    
+                    clients.add(clientThread);    
                 }
                 new Thread(clientThread).start();
             }
